@@ -253,13 +253,7 @@ iframe{border:none}
     object-position:center 10%;
   }
 
-  /* Vinheta do topo para legibilidade do header */
-  .hero-bg::before{
-    content:'';position:absolute;
-    top:0;left:0;right:0;height:24%;z-index:1;
-    background:linear-gradient(to bottom, rgba(13,6,6,.68) 0%, transparent 100%);
-    pointer-events:none;
-  }
+  .hero-bg::before{display:none}
 
   /* Gradiente base: escuro embaixo onde o título fica, claro em cima nos rostos */
   .hero-bg::after{
