@@ -225,10 +225,10 @@ iframe{border:none}
 
 /* ── HERO RESPONSIVE ── */
 /*
-  Mobile — 2-zone layout (eliminates overlay problem permanently):
-  Zone 1 (.hero-bg): image at top, height=52svh, in flow (not absolute)
-  Zone 2 (.hero-text): solid dark background below, never touches the photo
-  The fixed header/banner overlays zone 1 — no z-index conflict needed.
+  Mobile — título na imagem, infos abaixo:
+  .hero-bg (58svh, em fluxo): foto dos artistas + gradiente escuro na base
+  .hero-title (absolute, bottom:100% de .hero-text): flutua sobre o escuro da foto
+  .hero-text (fluxo, abaixo da foto): data, local, countdown, CTAs — fundo sólido
 */
 @media(max-width:900px){
   .hero{
@@ -237,40 +237,55 @@ iframe{border:none}
     min-height:100svh;
   }
 
-  /* Pull bg div out of absolute positioning → becomes first flex child */
+  /* Zona da imagem — primeiro filho flex, em fluxo */
   .hero-bg{
     position:relative;
     inset:auto;
-    flex:0 0 52svh;
+    flex:0 0 58svh;
   }
 
-  /* Mobile image: show faces clearly in the top portion */
   .hero-bg-img-desktop{display:none}
   .hero-bg-img-mobile{
     display:block;
     position:absolute;inset:0;
     width:100%;height:100%;
     object-fit:cover;
-    object-position:center 20%;
+    object-position:center 10%;
   }
 
-  /* Top vignette: readability behind fixed header */
+  /* Vinheta do topo para legibilidade do header */
   .hero-bg::before{
     content:'';position:absolute;
-    top:0;left:0;right:0;height:25%;z-index:1;
-    background:linear-gradient(to bottom, rgba(13,6,6,.7) 0%, transparent 100%);
+    top:0;left:0;right:0;height:24%;z-index:1;
+    background:linear-gradient(to bottom, rgba(13,6,6,.68) 0%, transparent 100%);
     pointer-events:none;
   }
 
-  /* Bottom fade: image bleeds seamlessly into text zone */
+  /* Gradiente base: escuro embaixo onde o título fica, claro em cima nos rostos */
   .hero-bg::after{
     content:'';position:absolute;
-    bottom:0;left:0;right:0;height:50%;z-index:1;
-    background:linear-gradient(to top, var(--bg) 0%, rgba(13,6,6,.6) 55%, transparent 100%);
+    bottom:0;left:0;right:0;height:52%;z-index:1;
+    background:linear-gradient(to top,
+      #0d0606 0%,
+      rgba(13,6,6,.92) 26%,
+      rgba(13,6,6,.55) 54%,
+      transparent 100%);
     pointer-events:none;
   }
 
-  /* Text zone: solid dark — zero overlap guaranteed */
+  /* Título flutua para cima dentro do gradiente escuro da imagem */
+  .hero-title{
+    position:absolute;
+    bottom:100%;
+    left:0;right:0;
+    z-index:3;
+    font-size:clamp(34px,10vw,56px);
+    line-height:.88;
+    margin-bottom:0;
+    padding:0 20px 20px;
+  }
+
+  /* Zona de informações — fundo sólido, abaixo da foto */
   .hero-text{
     position:relative;z-index:2;
     flex:1;
@@ -279,11 +294,13 @@ iframe{border:none}
     padding:20px 20px calc(96px + env(safe-area-inset-bottom,0px));
     justify-content:flex-start;
     background:var(--bg);
-    margin-top:-32px; /* overlap with the image fade for seamless visual blend */
+    overflow:visible;
   }
 
-  .hero-title{font-size:clamp(34px,9.5vw,56px);margin-bottom:16px}
-  .hero-tags{margin-bottom:18px}
+  /* Label redundante no mobile — título + tags já comunicam */
+  .hero-text .lbl{display:none}
+
+  .hero-tags{margin-top:4px;margin-bottom:18px}
   .cd-wrap{margin-bottom:20px}
   .cd-digit{font-size:25px;min-width:50px;padding:7px 7px}
   .cd-colon{font-size:20px;padding-bottom:13px}
