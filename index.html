@@ -7,7 +7,7 @@
   <meta name="description" content="DVD No Sentimento em Brasília — 26 de setembro de 2026 · Na Praia Parque · Ingresso Open Bar com visão privilegiada. Pré-venda exclusiva com preço especial.">
   <meta property="og:title" content="Felipe & Rodrigo — DVD No Sentimento em Brasília">
   <meta property="og:description" content="26/09/2026 · Na Praia Parque · Brasília/DF · Pré-venda exclusiva aberta">
-  <meta property="og:image" content="assets/images/foto-dupla.png">
+  <meta property="og:image" content="assets/images/Banner 01 - 1000x1000px.png">
   <meta name="theme-color" content="#0d0606">
 
   <!-- Meta Pixel -->
@@ -123,47 +123,38 @@ iframe{border:none}
 ────────────────────────────── */
 .hero{
   position:relative;
-  /* full screen minus banner+header */
   min-height:100svh;
-  display:grid;
-  /* desktop: 2 cols — text | artists */
-  grid-template-columns:55% 45%;
-  align-items:end;
+  display:flex;
+  align-items:flex-end;
   overflow:hidden;
 }
 
-/* dark gradient background (desktop) */
-.hero-bg{
+/* BACKGROUND IMAGES */
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg-img{
   position:absolute;inset:0;
-  background:linear-gradient(165deg,#5a0e14 0%,#240608 48%,#0d0606 100%);
-}
-
-/* mobile-only full photo bg */
-.hero-photo-mobile{
-  display:none;
-  position:absolute;inset:0;z-index:0;
-}
-.hero-photo-mobile img{
   width:100%;height:100%;
   object-fit:cover;
-  object-position:50% 12%; /* faces in top third */
-  opacity:.60;
 }
-/* bottom-up wash so text reads; top softener for header */
-.hero-photo-mobile::after{
-  content:'';position:absolute;inset:0;
+.hero-bg-img-desktop{object-position:78% center}
+.hero-bg-img-mobile{display:none;object-position:center 8%}
+
+/* Gradient overlay: left dark for text, subtle top for header, subtle bottom */
+.hero-bg::after{
+  content:'';position:absolute;inset:0;z-index:1;
   background:
-    linear-gradient(to bottom, rgba(13,6,6,.55) 0%, transparent 30%),
-    linear-gradient(to top,    #0d0606 0%, rgba(13,6,6,.88) 28%, rgba(13,6,6,.15) 60%, transparent 100%);
+    linear-gradient(to right, rgba(13,6,6,.97) 0%, rgba(13,6,6,.85) 25%, rgba(13,6,6,.45) 55%, rgba(13,6,6,0) 80%),
+    linear-gradient(to bottom, rgba(13,6,6,.55) 0%, transparent 20%),
+    linear-gradient(to top, rgba(13,6,6,.6) 0%, transparent 32%);
 }
 
 /* TEXT COLUMN */
 .hero-text{
   position:relative;z-index:2;
-  padding:0 48px 72px 48px;
+  max-width:620px;
+  padding:calc(var(--banner-h) + 60px + 32px) 0 80px 60px;
   display:flex;flex-direction:column;justify-content:flex-end;
   min-height:100svh;
-  padding-top:calc(var(--banner-h) + 60px + 24px);
 }
 .hero-title{
   font-family:'Anton',sans-serif;
@@ -217,100 +208,20 @@ iframe{border:none}
 
 .hero-ctas{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 
-/* IMAGE COLUMN (desktop only) */
-.hero-artists{
-  position:relative;z-index:2;
-  display:flex;align-items:flex-end;justify-content:center;
-  overflow:visible;
-  padding-bottom:0;
-}
-/* red glow behind artists */
-.hero-artists::before{
-  content:'';position:absolute;
-  bottom:0;left:50%;transform:translateX(-50%);
-  width:90%;height:60%;
-  background:radial-gradient(ellipse at 50% 90%,rgba(225,29,42,.2) 0%,transparent 70%);
-  pointer-events:none;z-index:0;
-}
-/* bottom fade so artists bleed into page */
-.hero-artists::after{
-  content:'';position:absolute;
-  bottom:0;left:0;right:0;height:25%;
-  background:linear-gradient(to top,var(--bg) 0%,transparent 100%);
-  pointer-events:none;z-index:2;
-}
-.hero-artists img{
-  position:relative;z-index:1;
-  width:112%;max-width:700px;
-  height:auto;
-  object-fit:contain;
-  transform:translateX(4%);
-  filter:drop-shadow(0 0 48px rgba(225,29,42,.22));
-}
-
 /* ── HERO RESPONSIVE ── */
 @media(max-width:900px){
-  /*
-    Mobile layout: flex-column with two clean zones.
-    Zone 1 (top): artists photo — NOTHING ELSE.
-    Zone 2 (bottom): title, countdown, CTAs.
-    order:-1 on hero-artists moves it before hero-text in the flex stack.
-  */
-  .hero{
-    display:flex;
-    flex-direction:column;
-    align-items:stretch;
-    min-height:100svh;
-    padding:0;
-    /* grid reset */
-    grid-template-columns:unset;
+  .hero-bg-img-desktop{display:none}
+  .hero-bg-img-mobile{display:block}
+  /* Stronger bottom wash so text zone is readable over photo */
+  .hero-bg::after{
+    background:
+      linear-gradient(to bottom, rgba(13,6,6,.6) 0%, transparent 24%),
+      linear-gradient(to top, #0d0606 0%, rgba(13,6,6,.94) 30%, rgba(13,6,6,.55) 55%, transparent 100%);
   }
-  .hero-photo-mobile{display:none}
-
-  /* ── Zone 1: artists photo (TOP, clean) ── */
-  .hero-artists{
-    order:-1;            /* visually first despite HTML order */
-    display:flex;
-    position:static;     /* back in normal flow — out of absolute */
-    width:100%;
-    justify-content:center;
-    align-items:flex-end;
-    /* top padding accounts for fixed banner + header */
-    padding-top:calc(var(--banner-h) + 60px + 4px);
-    flex:0 0 auto;
-    pointer-events:none;
-    overflow:hidden;
-    padding-bottom:0;
-  }
-  /* hide desktop glow pseudo; keep bottom fade to bleed into bg */
-  .hero-artists::before{display:none}
-  .hero-artists::after{
-    height:22%;
-    background:linear-gradient(to top,var(--bg) 0%,transparent 100%);
-  }
-  .hero-artists img{
-    /* fixed height = controls how tall the photo zone is */
-    height:46svh;
-    width:auto;
-    max-width:92%;
-    object-fit:contain;
-    object-position:bottom center;
-    opacity:1;
-    transform:none;
-    filter:drop-shadow(0 0 28px rgba(225,29,42,.22));
-  }
-
-  /* ── Zone 2: text (BOTTOM, after photo) ── */
   .hero-text{
-    position:static;
-    min-height:auto;
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-start;
-    padding:8px 20px calc(96px + env(safe-area-inset-bottom,0px));
-    /* subtle top gradient so zone 2 blends with the photo's bottom fade */
-    background:linear-gradient(to bottom,transparent 0%,var(--bg) 12%);
+    max-width:100%;
+    padding:calc(var(--banner-h) + 60px + 24px) 20px calc(96px + env(safe-area-inset-bottom,0px));
+    justify-content:flex-end;
   }
   .hero-title{font-size:clamp(36px,9.5vw,58px);margin-bottom:18px}
   .hero-tags{margin-bottom:20px}
@@ -322,6 +233,31 @@ iframe{border:none}
 @media(max-width:480px){
   .hero-ctas{flex-direction:column;align-items:stretch}
   .hero-ctas .btn{width:100%;justify-content:center}
+}
+
+/* ──────────────────────────────
+   EVENT STRIP (visual divider)
+────────────────────────────── */
+.event-strip{
+  position:relative;overflow:hidden;height:320px;
+}
+.event-strip img{
+  width:100%;height:100%;object-fit:cover;object-position:center 28%;
+}
+.event-strip::before,.event-strip::after{
+  content:'';position:absolute;left:0;right:0;z-index:1;
+  height:35%;pointer-events:none;
+}
+.event-strip::before{
+  top:0;
+  background:linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
+}
+.event-strip::after{
+  bottom:0;
+  background:linear-gradient(to top, var(--bg) 0%, transparent 100%);
+}
+@media(max-width:640px){
+  .event-strip{height:200px}
 }
 
 /* ──────────────────────────────
@@ -735,7 +671,10 @@ iframe{border:none}
 
 <!-- ── HERO ── -->
 <section class="hero">
-  <div class="hero-bg"></div>
+  <div class="hero-bg">
+    <img src="assets/images/Banner 04 - 1600x838px.png" alt="" class="hero-bg-img hero-bg-img-desktop" fetchpriority="high">
+    <img src="assets/images/Banner 03 - 624x1000px.png" alt="" class="hero-bg-img hero-bg-img-mobile" fetchpriority="high">
+  </div>
 
   <!-- text column -->
   <div class="hero-text">
@@ -781,10 +720,6 @@ iframe{border:none}
     </div>
   </div>
 
-  <!-- desktop: transparent PNG cutout floats on gradient -->
-  <div class="hero-artists">
-    <img src="assets/images/foto-dupla.png" alt="Felipe e Rodrigo" fetchpriority="high">
-  </div>
 </section>
 
 <!-- ── STATS ── -->
@@ -808,6 +743,11 @@ iframe{border:none}
     </div>
   </div>
 </section>
+
+<!-- ── EVENT VISUAL STRIP ── -->
+<div class="event-strip">
+  <img src="assets/images/Prancheta 1.png" alt="Felipe & Rodrigo — No Sentimento em Brasília · 26 SET">
+</div>
 
 <!-- ── INGRESSOS ── -->
 <section class="ticket-bg" id="ingressos">
