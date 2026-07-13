@@ -82,6 +82,7 @@ iframe{border:none}
   transition:color .2s;
 }
 .nav-link:hover{color:var(--fg)}
+.nav-links{display:flex;gap:22px}
 @media(max-width:768px){.nav-links{display:none}}
 
 /* ── BUTTONS ── */
@@ -235,13 +236,15 @@ iframe{border:none}
     flex-direction:column;
     align-items:stretch;
     min-height:100svh;
+    /* empurra hero-bg para baixo do header fixo — artistas ficam totalmente visíveis */
+    padding-top:calc(var(--banner-h) + 60px);
   }
 
-  /* Zona da imagem — primeiro filho flex, em fluxo */
+  /* Zona da imagem — primeiro filho flex, em fluxo, 100% abaixo do header */
   .hero-bg{
     position:relative;
     inset:auto;
-    flex:0 0 58svh;
+    flex:0 0 52svh;
   }
 
   .hero-bg-img-desktop{display:none}
@@ -250,7 +253,7 @@ iframe{border:none}
     position:absolute;inset:0;
     width:100%;height:100%;
     object-fit:cover;
-    object-position:center 15%;
+    object-position:center 12%;
   }
 
   .hero-bg::before{display:none}
@@ -729,7 +732,7 @@ iframe{border:none}
 <header class="header" id="header">
   <img src="assets/images/LOGO_FER_BRANCO.png" alt="Felipe & Rodrigo" class="header-logo">
   <nav class="header-nav">
-    <div class="nav-links" style="display:flex;gap:22px;">
+    <div class="nav-links">
       <a class="nav-link" href="#ingressos">Ingressos</a>
       <a class="nav-link" href="#dupla">A Dupla</a>
       <a class="nav-link" href="#hits">Hits</a>
