@@ -129,29 +129,44 @@ iframe{border:none}
   overflow:hidden;
 }
 
-/* BACKGROUND IMAGES */
+/* ── BACKGROUND IMAGES ── */
 .hero-bg{position:absolute;inset:0;z-index:0}
 .hero-bg-img{
   position:absolute;inset:0;
   width:100%;height:100%;
   object-fit:cover;
 }
-.hero-bg-img-desktop{object-position:78% center}
-.hero-bg-img-mobile{display:none;object-position:center 8%}
+/*
+  Desktop — Banner 04 (1600x838):
+  Artists occupy x≈36-100% of the image; Rodrigo at far right (x≈70-100%).
+  object-position:80% shows the full right side (both artists visible).
+  The left third is covered by a solid CSS overlay — text reads on top of it.
+*/
+.hero-bg-img-desktop{object-position:80% center}
+.hero-bg-img-mobile{display:none}
 
-/* Gradient overlay: left dark for text, subtle top for header, subtle bottom */
+/*
+  Desktop gradient:
+  - Left 32%: solid #0d0606 — text zone, fully opaque regardless of image
+  - 32-46%: hard-to-soft transition so the image "bleeds in" behind the text edge
+  - 46-78%: semi-transparent vignette framing the artists
+  - 78-100%: fully clear so Rodrigo (right edge) is unobscured
+*/
 .hero-bg::after{
   content:'';position:absolute;inset:0;z-index:1;
   background:
-    linear-gradient(to right, rgba(13,6,6,.97) 0%, rgba(13,6,6,.85) 25%, rgba(13,6,6,.45) 55%, rgba(13,6,6,0) 80%),
-    linear-gradient(to bottom, rgba(13,6,6,.55) 0%, transparent 20%),
-    linear-gradient(to top, rgba(13,6,6,.6) 0%, transparent 32%);
+    linear-gradient(to right,
+      #0d0606 0%, #0d0606 30%,
+      rgba(13,6,6,.92) 40%, rgba(13,6,6,.55) 54%,
+      rgba(13,6,6,.15) 68%, rgba(13,6,6,0) 80%),
+    linear-gradient(to bottom, rgba(13,6,6,.45) 0%, transparent 16%),
+    linear-gradient(to top,    rgba(13,6,6,.45) 0%, transparent 18%);
 }
 
-/* TEXT COLUMN */
+/* TEXT COLUMN — confined to left 48% so it never overlaps the artists */
 .hero-text{
   position:relative;z-index:2;
-  max-width:620px;
+  width:48%;
   padding:calc(var(--banner-h) + 60px + 32px) 0 80px 60px;
   display:flex;flex-direction:column;justify-content:flex-end;
   min-height:100svh;
@@ -209,23 +224,67 @@ iframe{border:none}
 .hero-ctas{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 
 /* ── HERO RESPONSIVE ── */
+/*
+  Mobile — 2-zone layout (eliminates overlay problem permanently):
+  Zone 1 (.hero-bg): image at top, height=52svh, in flow (not absolute)
+  Zone 2 (.hero-text): solid dark background below, never touches the photo
+  The fixed header/banner overlays zone 1 — no z-index conflict needed.
+*/
 @media(max-width:900px){
+  .hero{
+    flex-direction:column;
+    align-items:stretch;
+    min-height:100svh;
+  }
+
+  /* Pull bg div out of absolute positioning → becomes first flex child */
+  .hero-bg{
+    position:relative;
+    inset:auto;
+    flex:0 0 52svh;
+  }
+
+  /* Mobile image: show faces clearly in the top portion */
   .hero-bg-img-desktop{display:none}
-  .hero-bg-img-mobile{display:block}
-  /* Stronger bottom wash so text zone is readable over photo */
+  .hero-bg-img-mobile{
+    display:block;
+    position:absolute;inset:0;
+    width:100%;height:100%;
+    object-fit:cover;
+    object-position:center 20%;
+  }
+
+  /* Top vignette: readability behind fixed header */
+  .hero-bg::before{
+    content:'';position:absolute;
+    top:0;left:0;right:0;height:25%;z-index:1;
+    background:linear-gradient(to bottom, rgba(13,6,6,.7) 0%, transparent 100%);
+    pointer-events:none;
+  }
+
+  /* Bottom fade: image bleeds seamlessly into text zone */
   .hero-bg::after{
-    background:
-      linear-gradient(to bottom, rgba(13,6,6,.6) 0%, transparent 24%),
-      linear-gradient(to top, #0d0606 0%, rgba(13,6,6,.94) 30%, rgba(13,6,6,.55) 55%, transparent 100%);
+    content:'';position:absolute;
+    bottom:0;left:0;right:0;height:50%;z-index:1;
+    background:linear-gradient(to top, var(--bg) 0%, rgba(13,6,6,.6) 55%, transparent 100%);
+    pointer-events:none;
   }
+
+  /* Text zone: solid dark — zero overlap guaranteed */
   .hero-text{
-    max-width:100%;
-    padding:calc(var(--banner-h) + 60px + 24px) 20px calc(96px + env(safe-area-inset-bottom,0px));
-    justify-content:flex-end;
+    position:relative;z-index:2;
+    flex:1;
+    width:100%;
+    min-height:auto;
+    padding:20px 20px calc(96px + env(safe-area-inset-bottom,0px));
+    justify-content:flex-start;
+    background:var(--bg);
+    margin-top:-32px; /* overlap with the image fade for seamless visual blend */
   }
-  .hero-title{font-size:clamp(36px,9.5vw,58px);margin-bottom:18px}
-  .hero-tags{margin-bottom:20px}
-  .cd-wrap{margin-bottom:22px}
+
+  .hero-title{font-size:clamp(34px,9.5vw,56px);margin-bottom:16px}
+  .hero-tags{margin-bottom:18px}
+  .cd-wrap{margin-bottom:20px}
   .cd-digit{font-size:25px;min-width:50px;padding:7px 7px}
   .cd-colon{font-size:20px;padding-bottom:13px}
 }
