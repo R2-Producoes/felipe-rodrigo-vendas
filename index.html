@@ -250,7 +250,7 @@ iframe{border:none}
     position:absolute;inset:0;
     width:100%;height:100%;
     object-fit:cover;
-    object-position:center 10%;
+    object-position:center 38%; /* pula céu escuro do topo, começa nos artistas */
   }
 
   .hero-bg::before{display:none}
@@ -258,6 +258,7 @@ iframe{border:none}
   /* Gradiente base: escuro embaixo onde o título fica, claro em cima nos rostos */
   .hero-bg::after{
     content:'';position:absolute;
+    inset:auto; /* reseta top:0 herdado do desktop */
     bottom:0;left:0;right:0;height:52%;z-index:1;
     background:linear-gradient(to top,
       #0d0606 0%,
